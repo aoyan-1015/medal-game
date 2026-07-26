@@ -1,0 +1,138 @@
+.page-title {
+  margin: 6px 0 10px;
+  font-size: 1.6rem;
+}
+
+.jp-hint {
+  color: var(--text-dim);
+  margin: 0 0 24px;
+  max-width: 640px;
+}
+
+.jp-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .jp-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.wheel-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 34px 16px;
+  background: radial-gradient(circle at 50% 20%, #2a2a4f, var(--panel));
+}
+
+.wheel-wrap {
+  position: relative;
+  width: 280px;
+  height: 280px;
+}
+
+.wheel-pointer {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  color: var(--gold);
+  z-index: 2;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6));
+}
+
+.wheel {
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  border: 6px solid var(--gold-deep);
+  position: relative;
+  box-shadow: 0 0 34px rgba(0, 0, 0, 0.55), inset 0 0 0 2px rgba(255, 255, 255, 0.15);
+}
+
+.wheel-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  padding-top: 16px;
+  font-weight: 800;
+  font-size: 0.8rem;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+}
+
+.wheel-result {
+  margin-top: 24px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  min-height: 1.6em;
+  text-align: center;
+}
+
+.wheel-result.win {
+  color: var(--success);
+}
+
+.wheel-result.jackpot {
+  color: var(--gold);
+  animation: jp-pulse 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes jp-pulse {
+  from {
+    text-shadow: 0 0 6px rgba(255, 207, 77, 0.4);
+  }
+  to {
+    text-shadow: 0 0 24px rgba(255, 207, 77, 0.95);
+  }
+}
+
+.wheel-result.lose {
+  color: var(--text-dim);
+}
+
+.jp-ticket-count {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-2);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.spin-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+}
+
+.hint {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  min-height: 1.3em;
+  margin: 10px 0 0;
+  text-align: center;
+}
+
+.control-panel h2 {
+  margin: 20px 0 8px;
+  font-size: 1rem;
+  color: var(--text-dim);
+}
+
+.prize-list {
+  padding-left: 20px;
+  line-height: 1.9;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}

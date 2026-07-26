@@ -1,0 +1,204 @@
+.page-title {
+  margin: 6px 0 20px;
+  font-size: 1.6rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.boss-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 16px;
+  background: radial-gradient(circle at 50% 10%, #3a1f2f, var(--panel));
+}
+
+.boss-stage {
+  margin: 0 0 4px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.boss-name {
+  margin: 0 0 16px;
+  font-size: 1.3rem;
+}
+
+.boss-sprite-wrap {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.boss-sprite {
+  font-size: 7rem;
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.5));
+  transition: transform 0.08s ease;
+}
+
+.boss-sprite.hit {
+  animation: boss-shake 0.35s ease;
+}
+
+@keyframes boss-shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-10px) rotate(-3deg); }
+  40% { transform: translateX(8px) rotate(2deg); }
+  60% { transform: translateX(-6px) rotate(-1deg); }
+  80% { transform: translateX(4px); }
+  100% { transform: translateX(0); }
+}
+
+.boss-sprite.defeated {
+  animation: boss-defeat 0.6s ease forwards;
+}
+
+@keyframes boss-defeat {
+  to { transform: scale(0.2) rotate(20deg); opacity: 0; }
+}
+
+.damage-pop {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #ff5d6c;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.damage-pop.show {
+  animation: dmg-float 0.9s ease-out forwards;
+}
+
+.damage-pop.special {
+  color: var(--gold);
+  font-size: 2.4rem;
+}
+
+@keyframes dmg-float {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(0.7); }
+  20% { opacity: 1; transform: translate(-50%, -10px) scale(1.1); }
+  100% { opacity: 0; transform: translate(-50%, -60px) scale(1); }
+}
+
+.hp-bar-wrap {
+  width: 100%;
+  max-width: 340px;
+  height: 20px;
+  background: var(--bg-2);
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.hp-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #ff5d6c, #ff8f6c);
+  transition: width 0.35s ease;
+}
+
+.hp-text {
+  margin: 8px 0 0;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.control-panel h2 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  color: var(--text-dim);
+}
+
+.attack-reels {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+  background: #05070f;
+  border: 2px solid var(--gold-deep);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.reel-cell {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  background: linear-gradient(180deg, #0a0e1c, #131a2e);
+  border-radius: 8px;
+}
+
+.attack-btn,
+.attack5-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.hint {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  min-height: 1.3em;
+  margin: 6px 0;
+}
+
+.battle-log {
+  min-height: 3.2em;
+  font-size: 0.9rem;
+  color: var(--text);
+  line-height: 1.5;
+  margin: 10px 0 0;
+}
+
+.stat-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.stat {
+  flex: 1;
+  background: var(--bg-2);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-value.gold {
+  color: var(--gold);
+}

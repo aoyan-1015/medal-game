@@ -1,0 +1,542 @@
+.page-title {
+  margin: 6px 0 20px;
+  font-size: 1.6rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.machine-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 16px;
+  position: relative;
+  background: radial-gradient(circle at 50% 0%, #23305c, var(--panel));
+}
+
+.gogo-lamp {
+  margin-bottom: 14px;
+  padding: 6px 26px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+  color: #fff3f3;
+  background: linear-gradient(180deg, #ff3b3b, #8f0d0d);
+  border: 2px solid #ffb3b3;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  pointer-events: none;
+}
+
+.gogo-lamp.active {
+  opacity: 1;
+  transform: scale(1);
+  animation: gogo-flash 0.32s steps(1) infinite;
+}
+
+@keyframes gogo-flash {
+  0%, 49% {
+    background: linear-gradient(180deg, #ff3b3b, #8f0d0d);
+    box-shadow: 0 0 26px rgba(255, 59, 59, 0.9);
+  }
+  50%, 100% {
+    background: linear-gradient(180deg, #ffd23b, #a86a00);
+    box-shadow: 0 0 26px rgba(255, 210, 59, 0.9);
+  }
+}
+
+.gogo-lamp.bonus {
+  animation: bonus-flash 0.32s steps(1) infinite;
+  border-color: #fff3b3;
+}
+
+@keyframes bonus-flash {
+  0%, 32% {
+    background: linear-gradient(180deg, #ffd23b, #a86a00);
+    box-shadow: 0 0 28px rgba(255, 210, 59, 0.95);
+  }
+  33%, 65% {
+    background: linear-gradient(180deg, #ff6fae, #8f0d4d);
+    box-shadow: 0 0 28px rgba(255, 111, 174, 0.95);
+  }
+  66%, 100% {
+    background: linear-gradient(180deg, #6ea8ff, #0d3f8f);
+    box-shadow: 0 0 28px rgba(110, 168, 255, 0.95);
+  }
+}
+
+.bet-lock-note {
+  color: var(--danger);
+}
+
+/* ---------------------------------------------------------------------
+   予告演出 (spin-start tell effects) - purely cosmetic flourishes except
+   the "glitch" tier, which also nudges this spin's GOGO-trigger odds.
+   They play out on their own dedicated screen above the reels.
+   --------------------------------------------------------------------- */
+.tell-stage {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  height: 92px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #05070f, #0c1122);
+  border: 2px solid var(--panel-border);
+  box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.6);
+}
+
+.tell-stage-label {
+  position: absolute;
+  top: 5px;
+  left: 8px;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.tell-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sound-toggle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 7;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid var(--panel-border);
+  background: var(--bg-2);
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease, transform 0.08s ease;
+}
+
+.sound-toggle:hover {
+  border-color: var(--accent);
+}
+
+.sound-toggle:active {
+  transform: scale(0.94);
+}
+
+.tell-lamp {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.7rem;
+}
+
+.tell-lamp-blue {
+  color: #6ea8ff;
+  filter: drop-shadow(0 0 12px rgba(110, 168, 255, 0.9));
+  animation: tell-lamp-flash 0.55s steps(1) 2;
+}
+
+.tell-lamp-white {
+  color: #fff;
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.9));
+  animation: tell-lamp-flash 0.55s steps(1) 2;
+}
+
+.tell-lamp-red {
+  color: #ff3b3b;
+  filter: drop-shadow(0 0 10px rgba(255, 59, 59, 0.8));
+  opacity: 0;
+  animation: tell-lamp-flash-once 0.45s steps(1) 1;
+}
+
+@keyframes tell-lamp-flash {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0.12; }
+}
+
+@keyframes tell-lamp-flash-once {
+  0%, 30% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.tell-mascot {
+  position: absolute;
+  bottom: 6px;
+  font-size: 1.6rem;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.tell-mascot-bubble {
+  font-size: 0.85rem;
+  background: rgba(10, 14, 26, 0.8);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1px 6px;
+  margin-bottom: 6px;
+}
+
+.tell-mascot-walk {
+  left: -10%;
+  animation: tell-mascot-walk 1.6s linear forwards;
+}
+
+@keyframes tell-mascot-walk {
+  from { left: -10%; }
+  to { left: 105%; }
+}
+
+.tell-mascot-look {
+  left: 50%;
+  transform: translateX(-50%);
+  animation: tell-mascot-look 0.85s ease-in-out forwards;
+}
+
+@keyframes tell-mascot-look {
+  0% { opacity: 0; transform: translateX(-50%) rotate(0deg); }
+  20% { opacity: 1; }
+  40% { transform: translateX(-50%) rotate(-12deg); }
+  60% { transform: translateX(-50%) rotate(12deg); }
+  80% { transform: translateX(-50%) rotate(0deg); }
+  100% { opacity: 0; }
+}
+
+.tell-mascot-glance {
+  left: 8%;
+  bottom: 10px;
+  font-size: 1.1rem;
+  opacity: 0;
+  animation: tell-glance 0.55s ease-in-out forwards;
+}
+
+@keyframes tell-glance {
+  0%, 100% { opacity: 0; }
+  40%, 60% { opacity: 0.75; }
+}
+
+.tell-navi {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) scale(0.6);
+  font-size: 1.4rem;
+  opacity: 0;
+  animation: tell-navi-pop 0.5s ease-out forwards;
+}
+
+.tell-navi-left {
+  left: 4px;
+}
+
+.tell-navi-right {
+  right: 4px;
+}
+
+@keyframes tell-navi-pop {
+  0% { opacity: 0; transform: translateY(-50%) scale(0.5); }
+  35% { opacity: 1; transform: translateY(-50%) scale(1.1); }
+  70% { opacity: 1; transform: translateY(-50%) scale(1); }
+  100% { opacity: 0; transform: translateY(-50%) scale(0.9); }
+}
+
+.tell-mini {
+  position: absolute;
+  font-size: 1.5rem;
+}
+
+.tell-bird {
+  top: 10%;
+  left: -8%;
+  animation: tell-bird 1.7s ease-in-out forwards;
+}
+
+@keyframes tell-bird {
+  0% { left: -8%; top: 22%; opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { left: 105%; top: 4%; opacity: 0; }
+}
+
+.tell-leaf {
+  top: -8%;
+  left: 20%;
+  animation: tell-leaf 1.8s ease-in forwards;
+}
+
+@keyframes tell-leaf {
+  0% { top: -8%; left: 20%; opacity: 0; transform: rotate(0deg); }
+  15% { opacity: 1; }
+  100% { top: 100%; left: 55%; opacity: 0; transform: rotate(300deg); }
+}
+
+.tell-star {
+  top: 8%;
+  right: -6%;
+  animation: tell-star 0.9s ease-in forwards;
+}
+
+@keyframes tell-star {
+  0% { top: 8%; right: -6%; opacity: 0; }
+  20% { opacity: 1; }
+  100% { top: 70%; right: 85%; opacity: 0; }
+}
+
+.tell-rainbow {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: linear-gradient(
+    120deg,
+    #ff5d6c,
+    #ffcf4d,
+    #57e389,
+    #6ea8ff,
+    #c17dff,
+    #ff5d6c
+  );
+  background-size: 300% 300%;
+  mix-blend-mode: screen;
+  animation: tell-rainbow 0.45s ease-in-out forwards;
+}
+
+@keyframes tell-rainbow {
+  0% { opacity: 0; background-position: 0% 50%; }
+  40% { opacity: 0.55; background-position: 50% 50%; }
+  100% { opacity: 0; background-position: 100% 50%; }
+}
+
+.tell-stage.tell-flicker {
+  animation: tell-flicker 0.2s steps(1) 1;
+}
+
+@keyframes tell-flicker {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(0.55); }
+}
+
+.reels {
+  display: flex;
+  gap: 10px;
+  background: #05070f;
+  border: 3px solid var(--gold-deep);
+  border-radius: 12px;
+  padding: 10px;
+  position: relative;
+}
+
+.reel {
+  width: 96px;
+  height: 264px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #0a0e1c, #131a2e, #0a0e1c);
+}
+
+.strip {
+  display: flex;
+  flex-direction: column;
+}
+
+.cell {
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+}
+
+.strip.spinning .cell {
+  animation: reel-flicker 0.09s linear infinite;
+}
+
+@keyframes reel-flicker {
+  0% { transform: translateY(-6px); filter: blur(1.5px); opacity: 0.75; }
+  50% { transform: translateY(6px); filter: blur(1.5px); opacity: 0.9; }
+  100% { transform: translateY(-6px); filter: blur(1.5px); opacity: 0.75; }
+}
+
+.cell.settle {
+  animation: settle-bounce 0.28s ease-out;
+}
+
+@keyframes settle-bounce {
+  0% { transform: scale(1.25); }
+  60% { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+
+.payline-marker {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 50%;
+  height: 88px;
+  transform: translateY(-50%);
+  border-top: 2px solid rgba(255, 207, 77, 0.75);
+  border-bottom: 2px solid rgba(255, 207, 77, 0.75);
+  pointer-events: none;
+  box-shadow: 0 0 14px rgba(255, 207, 77, 0.25) inset;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.payline-marker.hit {
+  border-top-color: #ff3b3b;
+  border-bottom-color: #ff3b3b;
+  box-shadow: 0 0 18px rgba(255, 59, 59, 0.6) inset;
+  animation: payline-pulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes payline-pulse {
+  from { box-shadow: 0 0 10px rgba(255, 59, 59, 0.35) inset; }
+  to { box-shadow: 0 0 24px rgba(255, 59, 59, 0.85) inset; }
+}
+
+.cell.cell-hit {
+  position: relative;
+  border-radius: 8px;
+  box-shadow: 0 0 0 3px #ff3b3b, 0 0 16px rgba(255, 59, 59, 0.85);
+  animation: cell-hit-pulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes cell-hit-pulse {
+  from { box-shadow: 0 0 0 2px #ff3b3b, 0 0 8px rgba(255, 59, 59, 0.5); }
+  to { box-shadow: 0 0 0 4px #ff3b3b, 0 0 20px rgba(255, 59, 59, 0.95); }
+}
+
+.stop-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.stop-btn {
+  width: 96px;
+  padding: 10px 0;
+  border-radius: 8px;
+  border: 1px solid var(--panel-border);
+  background: var(--bg-2);
+  color: var(--text);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: transform 0.08s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.stop-btn:not(:disabled):hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.stop-btn:not(:disabled):active {
+  transform: translateY(0) scale(0.96);
+  background: linear-gradient(180deg, #ffdb6e, var(--gold-deep));
+  color: #241a02;
+}
+
+.stop-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.win-message {
+  margin-top: 20px;
+  min-height: 1.6em;
+  font-size: 1.3rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.win-message.win {
+  color: var(--success);
+}
+
+.win-message.jackpot {
+  color: var(--gold);
+  animation: jackpot-pulse 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes jackpot-pulse {
+  from { text-shadow: 0 0 6px rgba(255, 207, 77, 0.4); }
+  to { text-shadow: 0 0 22px rgba(255, 207, 77, 0.95); }
+}
+
+.win-message.lose {
+  color: var(--text-dim);
+}
+
+#bet-chips.locked .chip {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.control-panel h2 {
+  margin: 18px 0 10px;
+  font-size: 1rem;
+  color: var(--text-dim);
+}
+
+.control-panel h2:first-child {
+  margin-top: 0;
+}
+
+.spin-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 1.05rem;
+  margin-top: 8px;
+}
+
+.hint {
+  text-align: center;
+  color: var(--text-dim);
+  min-height: 1.3em;
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+}
+
+.paytable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.paytable td {
+  padding: 6px 4px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.paytable td:first-child {
+  font-size: 1.2rem;
+}
+
+.paytable td:last-child {
+  text-align: right;
+  color: var(--gold);
+  font-weight: 700;
+}

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>競馬ゲーム | メダルカジノ</title>
+<link rel="stylesheet" href="../../shared/theme.css" />
+<link rel="stylesheet" href="keiba.css" />
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main>
+    <h1 class="page-title">🐎 競馬ゲーム</h1>
+
+    <div class="layout">
+      <section class="panel horse-panel">
+        <h2>出走馬とオッズ</h2>
+        <p class="course-info" id="course-info"></p>
+        <div class="track-meta" id="track-meta"></div>
+        <div id="horse-list" class="horse-list"></div>
+      </section>
+
+      <section class="panel bet-panel">
+        <h2>賭け金</h2>
+        <div class="bet-type-row" id="bet-type-row">
+          <button class="bet-type-chip active" data-type="tan">単勝</button>
+          <button class="bet-type-chip" data-type="fuku">複勝</button>
+          <button class="bet-type-chip" data-type="umafuku">馬複</button>
+          <button class="bet-type-chip" data-type="umaren">馬連</button>
+          <button class="bet-type-chip" data-type="sanrenpuku">3連複</button>
+          <button class="bet-type-chip" data-type="sanrentan">3連単</button>
+        </div>
+        <p class="bet-type-hint" id="bet-type-hint"></p>
+        <div class="chip-row" id="bet-chips">
+          <button class="chip" data-amount="10">10枚</button>
+          <button class="chip" data-amount="50">50枚</button>
+          <button class="chip" data-amount="100">100枚</button>
+          <button class="chip" data-amount="max">全額</button>
+        </div>
+        <p class="selection-summary" id="selection-summary">馬とベット額を選んでください</p>
+        <button class="btn btn-primary" id="start-btn" disabled>🏁 レース開始</button>
+        <p class="race-status" id="race-status"></p>
+      </section>
+    </div>
+
+    <section class="panel track-panel">
+      <div class="track-panel-header">
+        <h2>レース</h2>
+        <button class="commentary-mute-btn" id="commentary-mute-btn" type="button" title="実況の音声ON/OFF">🔊</button>
+      </div>
+      <p class="commentary-box" id="commentary-box">🎙️ 出走準備中…</p>
+      <div class="track3d" id="track3d"></div>
+    </section>
+
+    <section class="panel result-panel hidden" id="result-panel">
+      <h2>結果</h2>
+      <ol id="result-list" class="result-list"></ol>
+      <p id="payout-message" class="payout-message"></p>
+      <button class="btn btn-primary again-btn" id="again-btn">🔄 次のレースへ</button>
+    </section>
+  </main>
+
+  <script src="../../shared/medal-bank.js"></script>
+  <script src="../../shared/jp-tickets.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.52.1"></script>
+  <script src="../../shared/supabase-config.js"></script>
+  <script src="../../shared/ranking.js"></script>
+  <script src="../../shared/header.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="keiba.js"></script>
+</body>
+</html>

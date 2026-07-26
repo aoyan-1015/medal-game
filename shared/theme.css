@@ -1,0 +1,477 @@
+:root {
+  --bg-0: #0b0f1a;
+  --bg-1: #131a2b;
+  --bg-2: #1b2440;
+  --panel: #17203a;
+  --panel-border: #2c3a63;
+  --gold: #ffcf4d;
+  --gold-deep: #d99b1f;
+  --text: #eef1fb;
+  --text-dim: #9aa4c7;
+  --danger: #ff5d6c;
+  --success: #57e389;
+  --accent: #6ea8ff;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  font-size: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(circle at 20% -10%, #2a3768 0%, transparent 55%),
+    radial-gradient(circle at 100% 0%, #3a2050 0%, transparent 45%),
+    var(--bg-0);
+  color: var(--text);
+  font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Segoe UI", system-ui, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px;
+  background: rgba(10, 14, 26, 0.85);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--panel-border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.app-header .brand {
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.gcoin-open-btn {
+  padding: 8px 14px;
+  font-size: 0.85rem;
+}
+
+.grank-open-btn {
+  padding: 8px 14px;
+  font-size: 0.85rem;
+}
+
+.balance-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(180deg, #2a2210, #1a1608);
+  border: 1px solid var(--gold-deep);
+  color: var(--gold);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  box-shadow: inset 0 0 0 1px rgba(255, 207, 77, 0.08);
+  transition: transform 0.15s ease;
+}
+
+.balance-pill.bump {
+  transform: scale(1.08);
+}
+
+.balance-pill .unit {
+  color: var(--text-dim);
+  font-weight: 500;
+  font-size: 0.85em;
+}
+
+main {
+  flex: 1;
+  padding: 24px;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.btn {
+  appearance: none;
+  border: 1px solid var(--panel-border);
+  background: var(--bg-2);
+  color: var(--text);
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.08s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, #ffdb6e, var(--gold-deep));
+  border-color: var(--gold-deep);
+  color: #241a02;
+}
+
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.btn-ghost {
+  background: transparent;
+}
+
+.chip-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  border: 1px solid var(--panel-border);
+  background: var(--bg-2);
+  color: var(--text);
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.chip.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  box-shadow: inset 0 0 0 1px rgba(255, 207, 77, 0.35);
+}
+
+.toast-stack {
+  position: fixed;
+  top: 70px;
+  right: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 200;
+}
+
+.toast {
+  background: var(--panel);
+  border: 1px solid var(--gold-deep);
+  color: var(--gold);
+  padding: 10px 16px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  font-weight: 600;
+  animation: toast-in 0.25s ease-out, toast-out 0.3s ease-in 2.7s forwards;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toast-out {
+  to { opacity: 0; transform: translateY(-8px); }
+}
+
+/* ---------------------------------------------------------------------
+   Global "コイン" ad menu (shared header): watch a video for medals.
+   Kept separate from any per-game メニュー/道具 styling.
+   --------------------------------------------------------------------- */
+.gcoin-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 7, 15, 0.9);
+  padding: 20px;
+}
+
+.gcoin-overlay.active {
+  display: flex;
+}
+
+.gcoin-box {
+  width: 100%;
+  max-width: 380px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.gcoin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.gcoin-title {
+  margin: 0;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.gcoin-close {
+  background: var(--bg-2);
+  border: 1px solid var(--panel-border);
+  color: var(--text);
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.gcoin-ad-box {
+  text-align: center;
+  background: var(--bg-2);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.gcoin-ad-title {
+  margin: 0 0 12px;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.gcoin-ad-screen {
+  width: 100%;
+  height: 120px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #0a0e1c, #1b2440);
+  border: 1px solid var(--panel-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.6rem;
+  margin-bottom: 12px;
+}
+
+.gcoin-ad-screen.playing {
+  animation: gcoin-ad-flicker 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes gcoin-ad-flicker {
+  from { filter: brightness(0.9); }
+  to { filter: brightness(1.2); }
+}
+
+.gcoin-ad-status {
+  margin: 0 0 12px;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  min-height: 1.3em;
+}
+
+.gcoin-ad-progress-wrap {
+  width: 100%;
+  height: 10px;
+  background: var(--bg-0);
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  display: none;
+}
+
+.gcoin-ad-progress-wrap.show {
+  display: block;
+}
+
+.gcoin-ad-progress {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #57e389, #ffcf4d);
+  transition: width 1s linear;
+}
+
+#gcoin-ad-watch-btn {
+  width: 100%;
+  padding: 12px;
+}
+
+/* ---------------------------------------------------------------------
+   Global "🏆 ランキング" overlay (shared header): live medal-earned
+   leaderboard backed by shared/ranking.js. Mirrors .gcoin-* chrome.
+   --------------------------------------------------------------------- */
+.grank-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 7, 15, 0.9);
+  padding: 20px;
+}
+
+.grank-overlay.active {
+  display: flex;
+}
+
+.grank-box {
+  width: 100%;
+  max-width: 380px;
+  max-height: 100%;
+  overflow-y: auto;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.grank-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.grank-title {
+  margin: 0;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.grank-close {
+  background: var(--bg-2);
+  border: 1px solid var(--panel-border);
+  color: var(--text);
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.grank-nick-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.grank-nick-input {
+  flex: 1;
+  min-width: 0;
+  background: var(--bg-2);
+  border: 1px solid var(--panel-border);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+.grank-disabled-note {
+  display: none;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 14px 0;
+}
+
+.grank-disabled-note.show {
+  display: block;
+}
+
+.grank-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.grank-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-2);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+.grank-row.me {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px rgba(110, 168, 255, 0.35);
+}
+
+.grank-rank {
+  width: 1.6em;
+  text-align: center;
+  font-weight: 800;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.grank-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.grank-score {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--gold);
+}
+
+.footer-note {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  padding: 18px;
+}

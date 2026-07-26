@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ボスバトル | メダルカジノ</title>
+<link rel="stylesheet" href="../../shared/theme.css" />
+<link rel="stylesheet" href="boss-battle.css" />
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main>
+    <h1 class="page-title">⚔️ ボスバトル</h1>
+
+    <div class="layout">
+      <section class="panel boss-panel">
+        <p class="boss-stage" id="boss-stage">ステージ 1</p>
+        <h2 class="boss-name" id="boss-name">スライムキング</h2>
+        <div class="boss-sprite-wrap">
+          <div class="boss-sprite" id="boss-sprite">👹</div>
+          <div class="damage-pop" id="damage-pop"></div>
+        </div>
+        <div class="hp-bar-wrap">
+          <div class="hp-bar" id="hp-bar"></div>
+        </div>
+        <p class="hp-text" id="hp-text">300 / 300</p>
+      </section>
+
+      <section class="panel control-panel">
+        <h2>攻撃リール</h2>
+        <div class="attack-reels" id="attack-reels">
+          <div class="reel-cell">🍒</div>
+          <div class="reel-cell">🍒</div>
+          <div class="reel-cell">🍒</div>
+        </div>
+        <button class="btn btn-primary attack-btn" id="attack-btn">⚔️ こうげき（1枚）</button>
+        <button class="btn attack5-btn" id="attack5-btn">⚔️⚔️ 5連続こうげき（5枚）</button>
+        <p class="hint" id="battle-hint"></p>
+        <p class="battle-log" id="battle-log"></p>
+        <div class="stat-row">
+          <div class="stat">
+            <span class="stat-label">撃破ボーナス</span>
+            <span class="stat-value gold" id="reward-preview">0</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="../../shared/medal-bank.js"></script>
+  <script src="../../shared/jp-tickets.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.52.1"></script>
+  <script src="../../shared/supabase-config.js"></script>
+  <script src="../../shared/ranking.js"></script>
+  <script src="../../shared/header.js"></script>
+  <script src="boss-battle.js"></script>
+</body>
+</html>

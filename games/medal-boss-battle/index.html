@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>メダル落としバトル | メダルカジノ</title>
+<link rel="stylesheet" href="../../shared/theme.css" />
+<link rel="stylesheet" href="battle.css" />
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <button class="ally-warning" id="ally-warning" type="button">
+    ⚠️ 相棒を設定してください
+  </button>
+
+  <main>
+    <div class="page-title-row">
+      <h1 class="page-title">🪙⚔️ メダル落としバトル</h1>
+      <button class="btn menu-open-btn" id="menu-open-btn" type="button">📋 メニュー</button>
+    </div>
+
+    <div class="layout">
+      <section class="panel game-screen">
+        <div class="menu-overlay" id="menu-overlay">
+          <div class="menu-box">
+            <div class="menu-header">
+              <p class="menu-title">📋 メニュー</p>
+              <button class="dex-close" id="menu-close" type="button">✕</button>
+            </div>
+
+            <div class="menu-view" id="menu-view-main">
+              <button class="btn btn-primary menu-choice-btn" id="menu-items-btn" type="button">🎒 道具</button>
+              <button class="btn menu-choice-btn" id="menu-coin-btn" type="button">🪙 コイン</button>
+            </div>
+
+            <div class="menu-view" id="menu-view-items">
+              <div class="item-row">
+                <span class="item-icon">💊</span>
+                <span class="item-info">
+                  <span class="item-name">回復薬</span>
+                  <span class="item-count" id="potion-count">0個</span>
+                </span>
+                <button class="btn btn-primary" id="potion-use-btn" type="button">使う</button>
+              </div>
+              <p class="hint">ボスを倒すと50%の確率で手に入ります。使うと仲間を1体全回復できます。</p>
+              <button class="btn btn-ghost menu-back-btn" id="items-back-btn" type="button">◀ 戻る</button>
+            </div>
+
+            <div class="menu-view" id="menu-view-heal">
+              <p class="hint">誰に使いますか？</p>
+              <div class="heal-target-grid" id="heal-target-grid"></div>
+              <button class="btn btn-ghost menu-back-btn" id="heal-back-btn" type="button">◀ 戻る</button>
+            </div>
+
+            <div class="menu-view" id="menu-view-coin">
+              <div class="coin-ad-box">
+                <p class="coin-ad-title">📺 30秒の動画を見てコインゲット！</p>
+                <div class="coin-ad-screen" id="coin-ad-screen">
+                  <span class="coin-ad-icon">🎬</span>
+                </div>
+                <p class="coin-ad-status" id="coin-ad-status">動画を見て30枚のメダルを獲得しよう。</p>
+                <div class="coin-ad-progress-wrap" id="coin-ad-progress-wrap">
+                  <div class="coin-ad-progress" id="coin-ad-progress"></div>
+                </div>
+                <button class="btn btn-primary" id="coin-ad-watch-btn" type="button">▶ 動画を見る</button>
+              </div>
+              <button class="btn btn-ghost menu-back-btn" id="coin-back-btn" type="button">◀ 戻る</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dex-overlay" id="dex-overlay">
+          <div class="dex-box">
+            <div class="dex-header">
+              <p class="dex-title">📖 UMA図鑑</p>
+              <button class="dex-close" id="dex-close" type="button">✕</button>
+            </div>
+            <div class="dex-grid" id="dex-grid"></div>
+            <p class="hint">捕まえたUMAをタップすると「相棒」に設定できます。相棒の星が高いほど威力ルーレットの会心が出やすくなります。</p>
+            <button class="btn btn-ghost dex-cheat-btn" id="dex-cheat-btn" type="button">🛠️ 全種類を捕獲済みにする（チート）</button>
+          </div>
+        </div>
+
+        <div class="capture-overlay" id="capture-overlay">
+          <div class="capture-box" id="capture-box">
+            <p class="capture-title">📖 UMAを捕まえよう！</p>
+            <div class="capture-sprite-wrap">
+              <div class="capture-sparkle-layer" id="capture-sparkle-layer"></div>
+              <div class="capture-sprite" id="capture-sprite">👻</div>
+            </div>
+            <p class="capture-name" id="capture-name">ぬりかべ</p>
+            <p class="capture-stars" id="capture-stars">★☆☆☆☆</p>
+            <p class="capture-result" id="capture-result"></p>
+            <div class="capture-btn-row">
+              <button class="btn btn-primary capture-btn" id="capture-btn" type="button">📖 捕まえる（40%）</button>
+              <button class="btn btn-ghost" id="capture-skip-btn" type="button">見送って次へ</button>
+            </div>
+            <button class="btn btn-primary capture-next-btn" id="capture-next-btn" type="button" style="display: none;">次のUMAへ ▶</button>
+          </div>
+        </div>
+
+        <div class="reel-bar">
+          <div class="attack-reels" id="attack-reels">
+            <div class="reel-cell">🍒</div>
+            <div class="reel-cell">🍒</div>
+            <div class="reel-cell">🍒</div>
+          </div>
+          <div class="reel-info">
+            <p class="hint">ボーナス球が落ちると自動でリールが回り、ボスに攻撃します。コインが1枚落ちるごとにもボスへ0.1ダメージ（10枚で1）。</p>
+            <p class="hint" id="battle-hint"></p>
+            <p class="battle-log" id="battle-log"></p>
+          </div>
+        </div>
+
+        <div class="battle-row">
+          <div class="boss-col">
+            <p class="boss-stage" id="boss-stage">ステージ 1</p>
+            <p class="boss-stars" id="boss-stars">★☆☆☆☆</p>
+            <div class="boss-sprite-wrap">
+              <div class="boss-sprite" id="boss-sprite">👻</div>
+              <div class="damage-pop" id="damage-pop"></div>
+            </div>
+            <h2 class="boss-name" id="boss-name">スライムキング</h2>
+            <div class="hp-bar-wrap">
+              <div class="hp-bar" id="hp-bar"></div>
+            </div>
+            <p class="hp-text" id="hp-text">300 / 300</p>
+
+            <div class="ally-row" id="ally-row">
+              <span class="ally-icon" id="ally-icon">🍄</span>
+              <span class="ally-info">
+                <span class="ally-name" id="ally-name">コロポックル</span>
+                <span class="ally-star" id="ally-star">★</span>
+                <span class="ally-hp-bar-wrap">
+                  <span class="ally-hp-bar" id="ally-hp-bar"></span>
+                </span>
+                <span class="ally-hp-text" id="ally-hp-text">80 / 80</span>
+              </span>
+              <button class="btn dex-open-btn" id="dex-open" type="button">📖 図鑑</button>
+            </div>
+            <div class="ally-empty" id="ally-empty">
+              <span class="ally-empty-text">😢 相棒がいません</span>
+              <button class="btn btn-primary dex-open-btn" id="dex-open-empty" type="button">📖 次の相棒を選ぶ</button>
+            </div>
+          </div>
+
+          <div class="field-wrap">
+            <canvas id="field" width="480" height="875"></canvas>
+          </div>
+
+          <div class="roulette-col">
+            <p class="roulette-title">⚡ 威力ルーレット</p>
+            <div class="power-wheel-wrap" id="power-wheel-wrap">
+              <div class="power-wheel-pointer">▼</div>
+              <div class="power-wheel" id="power-wheel"></div>
+            </div>
+            <p class="power-wheel-result" id="power-wheel-result"></p>
+            <ul class="power-odds" id="power-odds"></ul>
+            <div class="red-charge">
+              <span class="red-charge-label">赤球チャージ</span>
+              <span class="charge-dots" id="charge-dots">
+                <span class="charge-dot"></span>
+                <span class="charge-dot"></span>
+                <span class="charge-dot"></span>
+              </span>
+            </div>
+            <div class="red-charge">
+              <span class="red-charge-label">👑 金の球</span>
+              <span class="gold-count" id="gold-count">0回</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-bar">
+          <p class="hint">メダル1枚 = 1投入。上段に落ちたコインは下段に流れ落ち、手前の端から落ちた分だけ獲得。下段には常にボーナス球が3球あり、落ちると自動でボスに一撃！ 👑金の球は10%の確率で出現し、1球落ちるだけで威力ルーレットが回ります。⚡赤い球は40%の確率で出現し、3個貯めると威力ルーレットで大ダメージ！ 💀どくろ玉は10%の確率で出現し、落ちると相棒に30ダメージ。</p>
+          <div class="chip-row">
+            <button class="btn btn-primary" id="drop1-btn">🪙 1枚投入</button>
+            <button class="btn btn-primary" id="drop5-btn">🪙 5枚投入</button>
+          </div>
+          <button class="btn auto-drop-btn" id="auto-drop-btn" type="button">🔁 オート投入: OFF</button>
+          <p class="hint">テーブル上段をタップした位置が「狙い位置」(黄色い矢印)になり、1枚投入・5枚投入・オート投入もそこへ落とします。</p>
+          <div class="stat-row">
+            <div class="stat">
+              <span class="stat-label">場のコイン</span>
+              <span class="stat-value" id="field-count">0</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">今回の獲得</span>
+              <span class="stat-value gold" id="session-won">0</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">撃破ボーナス</span>
+              <span class="stat-value gold" id="reward-preview">0</span>
+            </div>
+          </div>
+          <p class="note" id="field-note"></p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="../../shared/medal-bank.js"></script>
+  <script src="../../shared/jp-tickets.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.52.1"></script>
+  <script src="../../shared/supabase-config.js"></script>
+  <script src="../../shared/ranking.js"></script>
+  <script src="../../shared/header.js"></script>
+  <script src="battle.js"></script>
+</body>
+</html>

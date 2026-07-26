@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>スロット | メダルカジノ</title>
+<link rel="stylesheet" href="../../shared/theme.css" />
+<link rel="stylesheet" href="slot.css" />
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main>
+    <h1 class="page-title">🎰 スロット</h1>
+
+    <div class="layout">
+      <section class="panel machine-panel">
+        <button class="sound-toggle" id="sound-toggle" type="button" aria-label="音声のオン/オフ" aria-pressed="false">🔊</button>
+        <div class="tell-stage" id="tell-stage">
+          <span class="tell-stage-label">🎬 演出</span>
+          <div class="tell-layer" id="tell-layer"></div>
+        </div>
+        <div class="gogo-lamp" id="gogo-lamp">GO!! GO!!</div>
+        <div class="reels" id="reels">
+          <div class="reel" data-reel="0"><div class="strip"></div></div>
+          <div class="reel" data-reel="1"><div class="strip"></div></div>
+          <div class="reel" data-reel="2"><div class="strip"></div></div>
+        </div>
+        <div class="payline-marker"></div>
+        <div class="stop-row" id="stop-row">
+          <button class="stop-btn" data-reel="0" disabled>STOP</button>
+          <button class="stop-btn" data-reel="1" disabled>STOP</button>
+          <button class="stop-btn" data-reel="2" disabled>STOP</button>
+        </div>
+        <p class="hint">スピンで回転開始。各レーンのSTOPボタンで好きなタイミングで止められます（目押し）。</p>
+        <p class="win-message" id="win-message"></p>
+      </section>
+
+      <section class="panel control-panel">
+        <h2>ベット額</h2>
+        <div class="chip-row" id="bet-chips">
+          <button class="chip active" data-amount="10">10枚</button>
+          <button class="chip" data-amount="30">30枚</button>
+          <button class="chip" data-amount="50">50枚</button>
+        </div>
+        <p class="hint bet-lock-note" id="bet-lock-note"></p>
+        <button class="btn btn-primary spin-btn" id="spin-btn">🎲 スピン</button>
+        <p class="hint" id="spin-hint"></p>
+
+        <h2>配当表（中央ラインで3つ揃い）</h2>
+        <table class="paytable">
+          <tbody id="paytable-body"></tbody>
+          <tr><td>🍒🍒 (2つ)</td><td>x1（ベット額が戻る）</td></tr>
+        </table>
+      </section>
+    </div>
+  </main>
+
+  <script src="../../shared/medal-bank.js"></script>
+  <script src="../../shared/jp-tickets.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.52.1"></script>
+  <script src="../../shared/supabase-config.js"></script>
+  <script src="../../shared/ranking.js"></script>
+  <script src="../../shared/header.js"></script>
+  <script src="slot.js"></script>
+</body>
+</html>
