@@ -7,6 +7,6 @@
 // url がこのファイルのプレースホルダーのままだと、ranking.js はオンライン
 // ランキング機能を自動的に無効化します（他の機能には影響しません）。
 window.SUPABASE_CONFIG = {
-  url: "PASTE_YOUR_SUPABASE_URL_HERE",
-  anonKey: "PASTE_YOUR_SUPABASE_ANON_KEY_HERE",
+  url: "https://dopwfrftjsnwfrvbecne.supabase.co",
+  anonKey: "sb_publishable_47wLQNcg4Gljwndx__jZ0Q_Xosi0rgr",
 };
