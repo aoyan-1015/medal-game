@@ -5,13 +5,18 @@
   // Shared field constants
   // ---------------------------------------------------------------------
   var W = 480;
-  var MEDAL_R = 20; // the jams were actually the upper pusher's unreachable rest position and the
+  var MEDAL_R = 24; // the jams were actually the upper pusher's unreachable rest position and the
   // uncapped upper->lower cascade (both fixed below), not coin size - so it's safe to size back up
   var PUSHER_PERIOD = 2200;
   var FALL_SPEED = 520;
   var COLLISION_ITERATIONS = 8;
   var FALL_ANIM_SEC = 0.3;
   var MEDAL_RESTITUTION = 0.15;
+  // Real pusher-machine coins pile up overlapping each other rather than
+  // sitting edge-to-edge like solid circles. Collision resolution only kicks
+  // in once coins overlap past this fraction of their combined radius, so a
+  // dense pile visually stacks instead of spreading out flat.
+  var MEDAL_OVERLAP = 0.62;
   var SIDE_EXIT_SPEED = 300;
 
   // Upper tier: where every player-paid coin drop lands first. No side hazard here -
@@ -44,13 +49,16 @@
     hasSideHazard: false,
     cap: Infinity,
     lastFrontY: null,
+    // Only the bottom board piles coins up overlapping each other; the
+    // upper tier keeps solid, non-overlapping circles.
+    medalOverlap: MEDAL_OVERLAP,
   };
 
   var H = 875;
 
-  var BONUS_PAYOUT = 10;
+  var BONUS_PAYOUT = 6;
   var BONUS_BALL_COUNT = 3;
-  var GOLD_CHANCE = 0.1;
+  var GOLD_CHANCE = 0.06;
   var RED_CHANCE = 0.4;
   var SKULL_CHANCE = 0.1;
   var SKULL_ALLY_DAMAGE = 30;
@@ -206,6 +214,9 @@
   }
 
   var SEED_COUNT_PER_TIER = 20;
+  // The lower board now allows coins to overlap (see MEDAL_OVERLAP), so it can
+  // start with a much denser pile without looking sparse or unrealistic.
+  var SEED_COUNT_LOWER = 50;
 
   // The table is never empty when a player first arrives: seed both tiers with a
   // pile already sitting on them so the first visit shows action immediately.
@@ -215,7 +226,7 @@
       var uy = upperCfg.floorY + Math.random() * (upperCfg.edgeY - upperCfg.floorY - 20);
       upperMedals.push(makeMedal(randomXFor(upperCfg), uy, { settled: true }));
     }
-    for (i = 0; i < SEED_COUNT_PER_TIER; i++) {
+    for (i = 0; i < SEED_COUNT_LOWER; i++) {
       var y = lowerCfg.floorY + Math.random() * (lowerCfg.edgeY - 60 - lowerCfg.floorY);
       medals.push(makeMedal(randomXFor(lowerCfg), y, { settled: true }));
     }
@@ -302,7 +313,8 @@
   // ---------------------------------------------------------------------
   // Physics
   // ---------------------------------------------------------------------
-  function resolveCollisions(list) {
+  function resolveCollisions(list, overlap) {
+    var overlapFactor = overlap == null ? 1 : overlap;
     for (var iter = 0; iter < COLLISION_ITERATIONS; iter++) {
       for (var i = 0; i < list.length; i++) {
         var a = list[i];
@@ -313,7 +325,7 @@
           var dx = b.x - a.x;
           var dy = b.y - a.y;
           var dist = Math.sqrt(dx * dx + dy * dy);
-          var minDist = a.r + b.r;
+          var minDist = (a.r + b.r) * overlapFactor;
           if (dist < minDist) {
             if (dist < 0.0001) {
               dx = Math.random() - 0.5;
@@ -357,7 +369,7 @@
       }
     });
 
-    resolveCollisions(list);
+    resolveCollisions(list, cfg.medalOverlap);
 
     list.forEach(function (m) {
       if (m.fallingOff) return;
@@ -424,20 +436,23 @@
           sessionWon += 1;
           if (m.bonus) {
             MedalBank.add(BONUS_PAYOUT, "メダル落としバトル:ボーナス球獲得");
-            JPTickets.add(1);
+            // Bonus balls are always kept in play (BONUS_BALL_COUNT) and fall
+            // constantly, so only the rare gold color earns a ticket - giving
+            // one for every color made tickets essentially free.
             if (m.color === "red") {
               noteEl.textContent =
-                "⚡ 赤いボール獲得！ " + BONUS_PAYOUT + " 枚！ チャージ " + Math.min(redCharge + 1, RED_CHARGE_TARGET) + "/" + RED_CHARGE_TARGET + " 🎫JP券+1";
+                "⚡ 赤いボール獲得！ " + BONUS_PAYOUT + " 枚！ チャージ " + Math.min(redCharge + 1, RED_CHARGE_TARGET) + "/" + RED_CHARGE_TARGET;
               addRedCharge();
             } else if (m.color === "skull") {
-              noteEl.textContent = "💀 どくろ玉！ " + BONUS_PAYOUT + " 枚獲得…だが相棒に" + SKULL_ALLY_DAMAGE + "ダメージ！ 🎫JP券+1";
+              noteEl.textContent = "💀 どくろ玉！ " + BONUS_PAYOUT + " 枚獲得…だが相棒に" + SKULL_ALLY_DAMAGE + "ダメージ！";
               applyAllySkullDamage();
             } else if (m.color === "gold") {
+              JPTickets.add(1);
               noteEl.textContent = "👑 金のボーナス球獲得！ " + BONUS_PAYOUT + " 枚！ 威力ルーレット開始！ 🎫JP券+1";
               addGoldCount();
               enqueueRoulette();
             } else {
-              noteEl.textContent = "🌸 ボーナス球獲得！ " + BONUS_PAYOUT + " 枚！ 🎫JP券+1";
+              noteEl.textContent = "🌸 ボーナス球獲得！ " + BONUS_PAYOUT + " 枚！";
               enqueueBonusAttack(m.color);
             }
           } else {
@@ -622,7 +637,13 @@
   }
 
   function renderMedals(list) {
-    list.forEach(function (m) {
+    // Draw back-to-front by Y so overlapping coins stack with the nearer
+    // (lower) one visibly on top, instead of insertion order cutting through
+    // the pile at random.
+    var sorted = list.slice().sort(function (a, b) {
+      return a.y - b.y;
+    });
+    sorted.forEach(function (m) {
       var k = m.fallingOff ? Math.max(0, 1 - m.fallT) : 1;
       if (k <= 0) return;
       if (m.bonus) {
@@ -843,7 +864,6 @@
   var dexCloseBtn = document.getElementById("dex-close");
   var dexOverlayEl = document.getElementById("dex-overlay");
   var dexGridEl = document.getElementById("dex-grid");
-  var dexCheatBtn = document.getElementById("dex-cheat-btn");
   var captureOverlayEl = document.getElementById("capture-overlay");
   var captureBoxEl = document.getElementById("capture-box");
   var captureSparkleLayerEl = document.getElementById("capture-sparkle-layer");
@@ -1256,21 +1276,6 @@
     dexOverlayEl.classList.remove("active");
   });
 
-  // Cheat: instantly mark every species (including the secret star6) as
-  // caught, for this browser's save data only.
-  dexCheatBtn.addEventListener("click", function () {
-    var added = 0;
-    for (var star = 1; star <= 6; star++) {
-      var pool = BOSS_SPECIES[star];
-      if (!pool) continue;
-      pool.forEach(function (sp) {
-        if (addToDex(sp.id)) added += 1;
-      });
-    }
-    renderDex();
-    renderAlly();
-    showToast(added > 0 ? "🛠️ 図鑑を全" + added + "種コンプリートした！" : "🛠️ すでに全種類捕獲済みです");
-  });
 
   function pickStar() {
     var total = STAR_WEIGHTS.reduce(function (sum, w) {
@@ -1394,7 +1399,7 @@
     bossSpriteEl.style.opacity = "";
     bossSpriteEl.style.transform = "";
     updateHpBar();
-    rewardPreviewEl.textContent = Math.round(boss.maxHp * 1.2).toLocaleString();
+    rewardPreviewEl.textContent = Math.round(boss.maxHp * 0.7).toLocaleString();
   }
 
   function updateHpBar() {
@@ -1476,7 +1481,7 @@
 
   function defeatBoss() {
     busy = true;
-    var reward = Math.round(boss.maxHp * 1.2);
+    var reward = Math.round(boss.maxHp * 0.7);
     MedalBank.add(reward, "メダル落としバトル:撃破報酬");
     JPTickets.add(1);
     var gotPotion = Math.random() < POTION_DROP_CHANCE;

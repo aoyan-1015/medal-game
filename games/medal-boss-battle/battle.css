@@ -516,15 +516,6 @@
   cursor: pointer;
 }
 
-.dex-cheat-btn {
-  width: 100%;
-  margin-top: 10px;
-  padding: 10px;
-  font-size: 0.8rem;
-  border-style: dashed;
-  color: var(--text-dim);
-}
-
 .dex-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
